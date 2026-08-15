@@ -1,9 +1,9 @@
-# VLuck Labs V6.1 OMEGA POLISH — 3D Premium
+# VLuck Labs V6.2 OMEGA CLARITY — 3D Premium
 
 Official domain: https://vlucklabs.xyz  
 Business email: founder@vlucklabs.xyz
 
-V6.1 OMEGA POLISH is a controlled visual/interaction upgrade of the existing static VLuck Labs website. It preserves the business identity, product positioning, major sections, legal pages, and GitHub → Vercel deployment model.
+V6.2 OMEGA CLARITY is a controlled visual/interaction upgrade of the existing static VLuck Labs website. It preserves the business identity, product positioning, major sections, legal pages, and GitHub → Vercel deployment model.
 
 ## Deployment
 1. Extract `VLuck_Labs_V6_OMEGA_3D_Premium.zip`.
@@ -43,4 +43,22 @@ It refines:
 - card depth motion
 - cursor-driven motion damping
 
+No DNS changes are required.
+
+
+## V6.2 Clarity Pass
+This release prioritizes sharpness and visual separation over extra effects.
+
+Refinements:
+- reduced ambient blur / haze
+- removed blur from floating hero modules
+- made the main product surface more opaque and crisp
+- moved floating modules to safer edge positions
+- increased dashboard micro-text size and contrast
+- reduced cursor tilt so text stays visually stable
+- reduced reflections and oversized shadows
+- strengthened panel boundaries without bright outlines
+- improved mobile micro-text clarity
+
+Business content, navigation, domain, email and legal meaning are unchanged.
 No DNS changes are required.

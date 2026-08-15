@@ -122,8 +122,8 @@
       currentX += (targetX - currentX) * 0.055;
       currentY += (targetY - currentY) * 0.055;
 
-      const rotateY = clamp(currentX * 2.45, -2.7, 2.7);
-      const rotateX = clamp(-currentY * 1.55, -1.75, 1.75);
+      const rotateY = clamp(currentX * 2.15, -2.35, 2.35);
+      const rotateX = clamp(-currentY * 1.35, -1.5, 1.5);
       plane.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate3d(${currentX * 3}px, ${currentY * 2}px, 0)`;
 
       layers.forEach(layer => {
@@ -170,7 +170,7 @@
         if (!hovering) return;
         currentX += (targetX - currentX) * .11;
         currentY += (targetY - currentY) * .11;
-        card.style.transform = `perspective(1050px) rotateX(${currentY * -1.35}deg) rotateY(${currentX * 1.6}deg) translateY(-1.5px)`;
+        card.style.transform = `perspective(1100px) rotateX(${currentY * -1.1}deg) rotateY(${currentX * 1.3}deg) translateY(-1px)`;
         raf = requestAnimationFrame(render);
       };
 
