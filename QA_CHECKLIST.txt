@@ -1,0 +1,18 @@
+VLuck Labs V5 Quality Gate
+
+canonical: PASS
+email: PASS
+concept_ui: PASS
+css_path: PASS
+js_path: PASS
+privacy_link: PASS
+terms_link: PASS
+anchors: PASS
+reduced_motion: PASS
+mobile: PASS
+no_threejs: PASS
+no_external_build: PASS
+local_assets_exist: PASS
+unique_ids: PASS
+
+No DNS changes are required.
