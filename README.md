@@ -1,9 +1,9 @@
-# VLuck Labs V6 OMEGA — 3D Premium
+# VLuck Labs V6.1 OMEGA POLISH — 3D Premium
 
 Official domain: https://vlucklabs.xyz  
 Business email: founder@vlucklabs.xyz
 
-V6 OMEGA is a controlled visual/interaction upgrade of the existing static VLuck Labs website. It preserves the business identity, product positioning, major sections, legal pages, and GitHub → Vercel deployment model.
+V6.1 OMEGA POLISH is a controlled visual/interaction upgrade of the existing static VLuck Labs website. It preserves the business identity, product positioning, major sections, legal pages, and GitHub → Vercel deployment model.
 
 ## Deployment
 1. Extract `VLuck_Labs_V6_OMEGA_3D_Premium.zip`.
@@ -31,3 +31,16 @@ V6 OMEGA is a controlled visual/interaction upgrade of the existing static VLuck
 
 ## Product honesty
 The hero dashboard is explicitly labeled **CONCEPT UI** and **Illustrative product interface • Product currently in development**. Interface numbers are concept/demo UI values, not company traction.
+
+
+## V6.1 focused polish
+This release intentionally does **not** change business content or the site architecture.
+It refines:
+- hero spacing on tablet/smaller desktop
+- floating module placement
+- dashboard micro-text readability
+- shadow/lighting restraint
+- card depth motion
+- cursor-driven motion damping
+
+No DNS changes are required.
