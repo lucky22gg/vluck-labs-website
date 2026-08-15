@@ -1,31 +1,82 @@
 (() => {
-  const root = document.documentElement;
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const coarse = window.matchMedia('(pointer: coarse)').matches;
+  'use strict';
 
-  const year = document.getElementById('year');
-  if (year) year.textContent = new Date().getFullYear();
-
-  const header = document.querySelector('.site-header');
-  const onScroll = () => {
-    if (!header) return;
-    header.style.background = window.scrollY > 20 ? 'rgba(7,9,13,.92)' : 'rgba(7,9,13,.72)';
+  const state = {
+    reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    finePointer: window.matchMedia('(hover: hover) and (pointer: fine)').matches,
+    heroInView: true,
+    raf: 0
   };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
 
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const id = a.getAttribute('href');
-      if (!id || id === '#') return;
-      const el = document.querySelector(id);
-      if (!el) return;
-      e.preventDefault();
-      el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'start' });
+  const q = (sel, root = document) => root.querySelector(sel);
+  const qa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+  function initYear() {
+    const el = q('#year');
+    if (el) el.textContent = String(new Date().getFullYear());
+  }
+
+  function initHeader() {
+    const header = q('[data-header]');
+    if (!header) return;
+    const update = () => header.classList.toggle('scrolled', window.scrollY > 18);
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+
+  function initMobileMenu() {
+    const button = q('[data-menu-toggle]');
+    const menu = q('[data-mobile-menu]');
+    if (!button || !menu) return;
+
+    const close = () => {
+      button.setAttribute('aria-expanded', 'false');
+      button.setAttribute('aria-label', 'Open navigation');
+      menu.classList.remove('open');
+    };
+
+    button.addEventListener('click', () => {
+      const open = button.getAttribute('aria-expanded') === 'true';
+      button.setAttribute('aria-expanded', String(!open));
+      button.setAttribute('aria-label', open ? 'Open navigation' : 'Close navigation');
+      menu.classList.toggle('open', !open);
     });
-  });
 
-  if ('IntersectionObserver' in window && !reduced) {
+    qa('a', menu).forEach(link => link.addEventListener('click', close));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    document.addEventListener('click', e => {
+      if (!menu.contains(e.target) && !button.contains(e.target)) close();
+    });
+  }
+
+  function initSmoothAnchors() {
+    qa('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', event => {
+        const id = link.getAttribute('href');
+        if (!id || id === '#') return;
+        const target = q(id);
+        if (!target) return;
+        event.preventDefault();
+        target.scrollIntoView({ behavior: state.reducedMotion ? 'auto' : 'smooth', block: 'start' });
+      });
+    });
+  }
+
+  function initReveal() {
+    const items = qa('[data-reveal]');
+    if (!items.length || state.reducedMotion || !('IntersectionObserver' in window)) return;
+
+    // Only hide elements once JS has confirmed it can reveal them.
+    items.forEach((item, index) => {
+      item.classList.add('reveal-ready', 'reveal-pending');
+      item.style.transitionDelay = `${Math.min((index % 4) * 55, 165)}ms`;
+    });
+
+    const fallback = window.setTimeout(() => {
+      items.forEach(item => item.classList.add('is-visible'));
+    }, 1600);
+
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -33,106 +84,129 @@
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -4% 0px' });
+    }, { threshold: 0.08, rootMargin: '0px 0px -2% 0px' });
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  } else {
-    document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+    items.forEach(item => observer.observe(item));
+    window.addEventListener('load', () => window.clearTimeout(fallback), { once: true });
   }
 
-  if (reduced || coarse) return;
+  function initActiveNav() {
+    const links = qa('[data-nav-link]');
+    if (!links.length || !('IntersectionObserver' in window)) return;
+    const targets = links.map(link => q(link.getAttribute('href'))).filter(Boolean);
+    const linkMap = new Map(links.map(link => [link.getAttribute('href').slice(1), link]));
 
-  const stage = document.querySelector('[data-parallax-stage]');
-  const object = document.querySelector('[data-tilt-root]');
-  const depthEls = stage ? [...stage.querySelectorAll('[data-depth]')] : [];
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      links.forEach(l => l.classList.remove('active'));
+      const active = linkMap.get(visible.target.id);
+      if (active) active.classList.add('active');
+    }, { rootMargin: '-30% 0px -55% 0px', threshold: [0, .1, .4, .8] });
 
-  let tx = 0, ty = 0, cx = 0, cy = 0;
-  let raf = null;
-
-  const animateStage = () => {
-    cx += (tx - cx) * 0.075;
-    cy += (ty - cy) * 0.075;
-
-    if (object) {
-      const rotY = cx * 4.2;
-      const rotX = -cy * 3.2;
-      object.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) translate3d(${cx * 4}px, ${cy * 3}px, 0)`;
-    }
-
-    depthEls.forEach(el => {
-      if (el === object) return;
-      const depth = parseFloat(el.dataset.depth || '0');
-      el.style.transform = `translate3d(${cx * depth * 30}px, ${cy * depth * 24}px, ${Math.abs(depth) * 70}px)`;
-    });
-
-    raf = requestAnimationFrame(animateStage);
-  };
-
-  if (stage) {
-    stage.addEventListener('pointermove', e => {
-      const r = stage.getBoundingClientRect();
-      tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
-      ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
-    });
-
-    stage.addEventListener('pointerleave', () => {
-      tx = 0;
-      ty = 0;
-    });
-
-    raf = requestAnimationFrame(animateStage);
+    targets.forEach(target => observer.observe(target));
   }
 
-  const cards = [...document.querySelectorAll('[data-tilt-card]')];
+  function initHeroDepth() {
+    const stage = q('[data-hero-stage]');
+    const plane = q('[data-product-plane]');
+    if (!stage || !plane || state.reducedMotion || !state.finePointer || window.innerWidth < 900) return;
 
-  cards.forEach(card => {
-    let rx = 0, ry = 0, crx = 0, cry = 0, cardRaf = null;
+    const layers = qa('[data-hero-layer]', stage).filter(el => el !== plane);
+    const reflection = q('[data-reflection]', stage);
+    let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+    let running = false;
 
-    const run = () => {
-      crx += (rx - crx) * 0.12;
-      cry += (ry - cry) * 0.12;
-      card.style.transform = `perspective(900px) rotateX(${cry * -2.2}deg) rotateY(${crx * 2.2}deg) translateY(-1px)`;
-      cardRaf = requestAnimationFrame(run);
+    const render = () => {
+      if (!running) return;
+      currentX += (targetX - currentX) * 0.055;
+      currentY += (targetY - currentY) * 0.055;
+
+      const rotateY = clamp(currentX * 2.7, -3, 3);
+      const rotateX = clamp(-currentY * 1.8, -2, 2);
+      plane.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate3d(${currentX * 3}px, ${currentY * 2}px, 0)`;
+
+      layers.forEach(layer => {
+        const depth = Number(layer.dataset.heroLayer || 0);
+        const x = currentX * depth * 18;
+        const y = currentY * depth * 14;
+        layer.style.transform = `translate3d(${x}px, ${y}px, ${depth * 46}px)`;
+      });
+
+      if (reflection) reflection.style.setProperty('--rx', `${-24 + (currentX + 1) * 28}%`);
+      state.raf = requestAnimationFrame(render);
     };
 
-    card.addEventListener('pointerenter', () => {
-      if (!cardRaf) cardRaf = requestAnimationFrame(run);
-    });
+    const start = () => {
+      if (running) return;
+      running = true;
+      state.raf = requestAnimationFrame(render);
+    };
+    const stop = () => {
+      running = false;
+      if (state.raf) cancelAnimationFrame(state.raf);
+      state.raf = 0;
+    };
 
-    card.addEventListener('pointermove', e => {
-      const r = card.getBoundingClientRect();
-      rx = ((e.clientX - r.left) / r.width - 0.5) * 2;
-      ry = ((e.clientY - r.top) / r.height - 0.5) * 2;
-      card.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
-      card.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
-    });
+    stage.addEventListener('pointermove', event => {
+      const r = stage.getBoundingClientRect();
+      targetX = clamp(((event.clientX - r.left) / r.width - .5) * 2, -1, 1);
+      targetY = clamp(((event.clientY - r.top) / r.height - .5) * 2, -1, 1);
+    }, { passive: true });
+    stage.addEventListener('pointerleave', () => { targetX = 0; targetY = 0; });
 
-    card.addEventListener('pointerleave', () => {
-      rx = 0;
-      ry = 0;
-      setTimeout(() => {
-        if (cardRaf) {
-          cancelAnimationFrame(cardRaf);
-          cardRaf = null;
-          card.style.transform = '';
-        }
-      }, 220);
-    });
-  });
+    const visibility = new IntersectionObserver(entries => {
+      entries.forEach(entry => entry.isIntersecting ? start() : stop());
+    }, { threshold: .05 });
+    visibility.observe(stage);
+  }
 
-  document.querySelectorAll('.magnetic').forEach(btn => {
-    btn.addEventListener('pointermove', e => {
-      const r = btn.getBoundingClientRect();
-      const x = e.clientX - (r.left + r.width / 2);
-      const y = e.clientY - (r.top + r.height / 2);
-      btn.style.transform = `translate(${x * 0.035}px, ${y * 0.05}px) translateY(-2px)`;
-    });
-    btn.addEventListener('pointerleave', () => {
-      btn.style.transform = '';
-    });
-  });
+  function initCardLight() {
+    if (state.reducedMotion || !state.finePointer) return;
+    qa('[data-card]').forEach(card => {
+      let targetX = 0, targetY = 0, currentX = 0, currentY = 0, raf = 0, hovering = false;
 
-  window.addEventListener('beforeunload', () => {
-    if (raf) cancelAnimationFrame(raf);
-  });
+      const render = () => {
+        if (!hovering) return;
+        currentX += (targetX - currentX) * .11;
+        currentY += (targetY - currentY) * .11;
+        card.style.transform = `perspective(1000px) rotateX(${currentY * -1.6}deg) rotateY(${currentX * 1.9}deg) translateY(-2px)`;
+        raf = requestAnimationFrame(render);
+      };
+
+      card.addEventListener('pointerenter', () => { hovering = true; if (!raf) raf = requestAnimationFrame(render); });
+      card.addEventListener('pointermove', event => {
+        const r = card.getBoundingClientRect();
+        const px = (event.clientX - r.left) / r.width;
+        const py = (event.clientY - r.top) / r.height;
+        targetX = clamp((px - .5) * 2, -1, 1);
+        targetY = clamp((py - .5) * 2, -1, 1);
+        card.style.setProperty('--mx', `${px * 100}%`);
+        card.style.setProperty('--my', `${py * 100}%`);
+      }, { passive: true });
+      card.addEventListener('pointerleave', () => {
+        hovering = false; targetX = 0; targetY = 0; currentX = 0; currentY = 0;
+        if (raf) cancelAnimationFrame(raf); raf = 0; card.style.transform = '';
+      });
+    });
+  }
+
+  function initFAQ() {
+    qa('.faq details').forEach(detail => {
+      detail.addEventListener('toggle', () => {
+        if (!detail.open) return;
+        qa('.faq details').forEach(other => { if (other !== detail) other.open = false; });
+      });
+    });
+  }
+
+  function init() {
+    const tasks = [initYear, initHeader, initMobileMenu, initSmoothAnchors, initReveal, initActiveNav, initHeroDepth, initCardLight, initFAQ];
+    tasks.forEach(fn => {
+      try { fn(); } catch (error) { console.warn(`[VLuck] ${fn.name} skipped:`, error); }
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
+  else init();
 })();
