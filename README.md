@@ -1,28 +1,29 @@
-# VLuck Labs Premium Website v3
+# VLuck Labs Premium Website V4
 
-Official domain: https://vlucklabs.xyz  
+Official domain: https://vlucklabs.xyz
 Business email: founder@vlucklabs.xyz
 
-This package is a premium visual upgrade of the VLuck Labs / LuckForge AI startup website. It keeps the startup claims conservative and factual while making the site feel more polished, technical, and investor/startup-program ready.
+## What's new in V4
+- Premium AI/SaaS hero
+- Animated content-intelligence dashboard
+- Scroll reveal effects
+- Cursor glow interaction
+- Rich bento product layout
+- Platform architecture section
+- Product roadmap
+- About / principles
+- FAQ + Early access CTA
+- Privacy / Terms / 404
+- SEO, sitemap, robots, Vercel config
 
-## What's upgraded
-- Premium dark AI/SaaS visual system
-- Glass + gradient UI
-- Hover depth and shine interactions
-- Scroll reveal animations
-- Animated product metrics and workflow visualization
-- Responsive mobile layout
-- LuckForge AI architecture + roadmap
-- Privacy, Terms, SEO metadata, sitemap, robots.txt
-- founder@vlucklabs.xyz integrated throughout
-
-## Update the live website
+## Update your live website
 1. Extract this ZIP.
-2. Open the existing GitHub repo `vluck-labs-website`.
-3. Replace the old files with these files.
-4. Commit changes (example: `Premium website v3`).
-5. Vercel automatically redeploys the repository.
-6. Your existing `vlucklabs.xyz` domain stays connected.
+2. Open GitHub repo `vluck-labs-website`.
+3. Upload all extracted files to the repository root.
+4. Commit directly to `main`.
+5. Vercel automatically redeploys.
+6. No DNS changes are required.
 
-## Important
-Do NOT change or delete the Zoho MX/SPF/DKIM DNS records or the Vercel A record. Updating GitHub website files does not require any DNS changes.
+Do NOT change:
+- Zoho MX/SPF/DKIM records
+- Vercel A record
