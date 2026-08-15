@@ -1,36 +1,28 @@
-# VLuck Labs Advanced Startup Website
+# VLuck Labs Premium Website v3
 
-Company: VLuck Labs
-Product: LuckForge AI
-Domain: https://vlucklabs.xyz
+Official domain: https://vlucklabs.xyz  
 Business email: founder@vlucklabs.xyz
 
-Deploy free on Vercel:
-1. Extract this ZIP.
-2. Sign in to Vercel.
-3. Create a new project and upload/import this folder.
-4. Deploy.
-5. Project > Settings > Domains > add `vlucklabs.xyz`.
-6. Vercel will show exact A/CNAME records.
-7. Add only those website records in Spaceship Advanced DNS.
-8. Keep all Zoho MX/SPF/DKIM/verification records unchanged.
+This package is a premium visual upgrade of the VLuck Labs / LuckForge AI startup website. It keeps the startup claims conservative and factual while making the site feel more polished, technical, and investor/startup-program ready.
 
-Included:
-- Advanced responsive landing page
-- LuckForge AI positioning
-- Platform architecture
-- Roadmap
-- About
-- FAQ
-- Privacy Policy
-- Terms
-- 404 page
-- SEO metadata
-- robots.txt
-- sitemap.xml
-- favicon
-- Vercel config
+## What's upgraded
+- Premium dark AI/SaaS visual system
+- Glass + gradient UI
+- Hover depth and shine interactions
+- Scroll reveal animations
+- Animated product metrics and workflow visualization
+- Responsive mobile layout
+- LuckForge AI architecture + roadmap
+- Privacy, Terms, SEO metadata, sitemap, robots.txt
 - founder@vlucklabs.xyz integrated throughout
 
-Accuracy:
-The site does not claim customers, investment, partnerships, revenue, or traction that has not been earned.
+## Update the live website
+1. Extract this ZIP.
+2. Open the existing GitHub repo `vluck-labs-website`.
+3. Replace the old files with these files.
+4. Commit changes (example: `Premium website v3`).
+5. Vercel automatically redeploys the repository.
+6. Your existing `vlucklabs.xyz` domain stays connected.
+
+## Important
+Do NOT change or delete the Zoho MX/SPF/DKIM DNS records or the Vercel A record. Updating GitHub website files does not require any DNS changes.
