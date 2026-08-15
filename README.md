@@ -1,9 +1,9 @@
-# VLuck Labs V6.2 OMEGA CLARITY — 3D Premium
+# VLuck Labs V6.3 ULTRA CLEAR — 3D Premium
 
 Official domain: https://vlucklabs.xyz  
 Business email: founder@vlucklabs.xyz
 
-V6.2 OMEGA CLARITY is a controlled visual/interaction upgrade of the existing static VLuck Labs website. It preserves the business identity, product positioning, major sections, legal pages, and GitHub → Vercel deployment model.
+V6.3 ULTRA CLEAR is a controlled visual/interaction upgrade of the existing static VLuck Labs website. It preserves the business identity, product positioning, major sections, legal pages, and GitHub → Vercel deployment model.
 
 ## Deployment
 1. Extract `VLuck_Labs_V6_OMEGA_3D_Premium.zip`.
@@ -61,4 +61,22 @@ Refinements:
 - improved mobile micro-text clarity
 
 Business content, navigation, domain, email and legal meaning are unchanged.
+No DNS changes are required.
+
+
+## V6.3 Ultra Clear — Final Precision Pass
+Primary objective: nothing should look blurry, muddy, merged, or accidentally overlap.
+
+Changes:
+- floating hero modules moved into dedicated side rails
+- product surface narrowed so modules no longer cover product content
+- micro-text floor increased on desktop
+- remaining haze/blur reduced further
+- text-heavy product surface uses less Z/perspective distortion
+- cursor tilt reduced further for stable readability
+- glass blur removed from product panels
+- stronger physical separation between panels
+- mobile keeps the simpler no-floating-module layout
+
+Business content and static deployment architecture are unchanged.
 No DNS changes are required.
