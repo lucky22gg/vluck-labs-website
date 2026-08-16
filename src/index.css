@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import 'tailwindcss';
+
+/* ── Design tokens ───────────────────────────────────── */
+:root {
+  --bg-0: #07090D;
+  --bg-1: #0B0F15;
+  --bg-2: #10161F;
+  --card: #141B25;
+  --card-hi: #1A2333;
+  --txt-0: #E8EDF5;
+  --txt-1: #8A9BB0;
+  --txt-2: #4A5C72;
+  --violet: #7C5CFC;
+  --cyan: #36D1DC;
+  --blue: #4A8EF8;
+  --border-lo: rgba(255,255,255,0.06);
+  --border-md: rgba(255,255,255,0.10);
+  --border-hi: rgba(255,255,255,0.17);
+}
+
+/* ── Base ────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg-0);
+  color: var(--txt-0);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', sans-serif; }
+
+/* ── Scrollbar ───────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 3px; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+/* ── Utility classes ─────────────────────────────────── */
+.font-display { font-family: 'Outfit', sans-serif; }
+.font-mono    { font-family: 'JetBrains Mono', monospace; }
+
+/* Subtle technical grid background */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.016) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.016) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Sections always visible — reveal class adds no hiding */
+.reveal {
+  opacity: 1 !important;
+  transform: none !important;
+}
+.reveal.in {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* ── Hero responsive grid ────────────────────────────── */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 56px;
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1fr 1.32fr;
+  }
+}
+
+/* ── Bento grid (product section) ────────────────────── */
+.bento {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 720px) {
+  .bento {
+    grid-template-columns: 1fr 1fr;
+  }
+  .bento-wide { grid-column: span 2; }
+}
+@media (min-width: 1100px) {
+  .bento {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .bento-wide-lg { grid-column: span 2; }
+  .bento-full-lg { grid-column: span 3; }
+}
+
+/* ── Card hover lift ─────────────────────────────────── */
+.card-hover {
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.card-hover:hover {
+  border-color: rgba(255,255,255,0.15) !important;
+  transform: translateY(-2px);
+}
+
+/* ── Focus ring ──────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Reduced motion ──────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
